@@ -1,4 +1,4 @@
-# binswap
+# 🗑️binswap🔀
 
 ## What is this
 
