@@ -2,20 +2,31 @@
 
 ## What is this
 
-`binswap` is a cli tool that helps you quickly switch between different versions of a binary, written in rust.
+`binswap` is a cli tool that helps you quickly switch between different versions of an executable, written in rust.
 
-## Why do I need this
+## Use case
 
-I have found myself wanting a tool such as this in the following cases:
+You need to rapidly switch between several versions of an executable whose name does not include its version number, and you can't change its name for whatever reason.
 
-- Frequently swapping between projects that use a different version of a given binary
+## Why can't I just add the version to the names
 
-- Attempting to track down a bug in one of several versions of a given binary
+Maybe one of these:
+
+- The executable is run in several places in a program, you don't want to change the version in each of these
+- You use the same version most of the time and don't want to have to type out that same version every time
 
 ## How do I use this
 
+### Installation from source
+
+- Grab the latest stable version of Rust
+- Add `/home/<USER>/.cargo/bin` to your PATH to be able to run the installed binary
+- Run `cargo install` **TODO: PACKAGE NAME** 
+
+### Usage
+
 **Add new binary version:**
-`bs <binary-alias> <binary-version> <path-to-binary>`
+`bs <binary-name> <binary-version> <path-to-binary>`
 
 **Switch to binary version**
-`bs <binary alias> <binary-version>`
+`bs <binary-name> <binary-version>`
