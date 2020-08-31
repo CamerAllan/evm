@@ -12,6 +12,7 @@ struct Cli {
 }
 
 fn main() {
+    let binswapDir = "~/.binswap/"
     let args = Cli::from_args();
     println!("{:?}", args);
 }
