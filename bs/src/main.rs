@@ -1,21 +1,7 @@
-use dirs;
-use std::fs;
-use std::path::Path;
+mod args;
 use structopt::StructOpt;
 
-// Command line arguments
-#[derive(StructOpt, Debug)]
-struct Cli {
-    // The name of the binary, defaults to filename
-    name: String,
-    // The version of the binary
-    version: String,
-    // The path to the new binary we are adding
-    path: std::path::PathBuf,
-}
-
-fn main() -> std::io::Result<()> {
-    let args = Cli::from_args();
-    println!("{:?}", args);
-    Ok(())
+fn main() {
+    let opt = args::Opt::from_args();
+    println!("{:?}", opt);
 }
