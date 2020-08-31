@@ -2,7 +2,7 @@
 
 ## What is this
 
-`binswap` is a cli tool that helps you quickly switch between different versions of a binary.
+`binswap` is a cli tool that helps you quickly switch between different versions of a binary, written in rust.
 
 ## Why do I need this
 
