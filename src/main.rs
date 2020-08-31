@@ -1,3 +1,7 @@
+mod config;
+use dirs;
+use std::fs;
+use std::path::Path;
 use structopt::StructOpt;
 
 // Command line arguments
@@ -11,8 +15,8 @@ struct Cli {
     path: std::path::PathBuf,
 }
 
-fn main() {
-    let binswapDir = "~/.binswap/"
+fn main() -> std::io::Result<()> {
     let args = Cli::from_args();
     println!("{:?}", args);
+    Ok(())
 }
