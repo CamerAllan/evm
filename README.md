@@ -2,7 +2,7 @@
 
 ## What is this
 
-`binswap` is a cli tool that helps you quickly switch between different versions of an executable, written in rust.
+`binswap` is a cli tool that helps you quickly switch between archived versions of an executable, written in rust.
 
 ## Use case
 

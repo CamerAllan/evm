@@ -4,11 +4,10 @@ use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 /// binswap allows you to quickly swap out different binary versions
 pub struct BinSwapOpts {
-    // Default behaviour is to Swap
-    /// Alias of the binary to swap to
-    #[structopt(requires("version"))]
+    /// Alias of the binary
+    #[structopt()]
     pub name: Option<String>,
-    /// Version of the binary to swap to
+    /// Version of the binary
     #[structopt(requires("name"))]
     pub version: Option<String>,
 
@@ -28,6 +27,9 @@ pub enum SubCommand {
         name: String,
         /// Version of the binary to swap to
         version: String,
+    },
+    Current {
+        name: String,
     },
     /// Add a binary to binswap, so that you then can swap to it
     Add {
