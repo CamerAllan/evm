@@ -33,8 +33,6 @@ impl BinSwap {
 
         if !profile_contents.contains(&export) {
             // Only add export once
-            println!("Prepending {:?} to path...", &active_dir);
-
             if let Err(err) = writeln!(profile, "{}", &export) {
                 eprintln!("Couldn't write to file '{:?}': {}", &active_dir, err);
             }
@@ -78,7 +76,7 @@ impl BinSwap {
         Ok(())
     }
 
-    pub fn current(self, name: &str) -> std::io::Result<()> {
+    pub fn active(self, name: &str) -> std::io::Result<()> {
         // Read the actual file we're symlinked to
         match fs::read_link(&self.active_bin(&name)) {
             Ok(archive_bin) => println!(
@@ -110,7 +108,7 @@ impl BinSwap {
     }
 
     pub fn remove(self, name: &str, version: &Option<String>) -> std::io::Result<()> {
-        // TODO: Refactor out command implementation, then call current() to see if we need to remove the symlink
+        // TODO: Refactor out command implementation, then call active() to see if we need to remove the symlink
         // For now we just leave the symlink
 
         let dir_to_remove: path::PathBuf;

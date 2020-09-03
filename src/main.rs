@@ -40,18 +40,29 @@ fn run(opt: BinSwapOpts) {
     let command = match opt.cmd {
         // If user has specified a command, do that
         Some(cmd) => cmd,
-        // No command specified
+        // No command specified, seek out default behaviour
         None => {
-            match opt.version {
-                // If version specified, swap to that version
-                Some(version) => SubCommand::Swap {
-                    name: opt.name.unwrap(), // StructOpts catches the no name case for now
-                    version: version,
+            match opt.path {
+                // If path specified, add that version
+                Some(path) => SubCommand::Add {
+                    name: opt.name.unwrap(),
+                    version: opt.version.unwrap(),
+                    path,
                 },
-                // If no version is specified, show the current version
-                None => match opt.name {
-                    Some(name) => SubCommand::Current { name },
-                    None => panic!("Run with --help to for usage info."),
+                None => match opt.version {
+                    // If version specified, swap to that version
+                    Some(version) => SubCommand::Swap {
+                        name: opt.name.unwrap(), // StructOpts catches the no name case for now
+                        version: version,
+                    },
+                    // If no version is specified, show the active version
+                    None => match opt.name {
+                        Some(name) => SubCommand::Active { name },
+                        None => {
+                            println!("Run `bs --help` for usage info.");
+                            return;
+                        }
+                    },
                 },
             }
         }
@@ -61,7 +72,7 @@ fn run(opt: BinSwapOpts) {
         SubCommand::Init {} => bs.init(),
         SubCommand::Swap { name, version } => bs.swap(&name, &version),
         SubCommand::List { name } => bs.list(&name),
-        SubCommand::Current { name } => bs.current(&name),
+        SubCommand::Active { name } => bs.active(&name),
         SubCommand::Add {
             name,
             version,

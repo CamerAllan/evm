@@ -4,12 +4,15 @@ use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 /// binswap allows you to quickly swap out different binary versions
 pub struct BinSwapOpts {
-    /// Alias of the binary
+    /// Name of the binary
     #[structopt()]
     pub name: Option<String>,
     /// Version of the binary
     #[structopt(requires("name"))]
     pub version: Option<String>,
+    /// Path to the binary to add
+    #[structopt(requires("version"), parse(from_os_str))]
+    pub path: Option<PathBuf>,
 
     #[structopt(subcommand)]
     pub cmd: Option<SubCommand>,
@@ -34,14 +37,14 @@ pub enum SubCommand {
         /// Name of the binary to list versions of
         name: String,
     },
-    /// Get current version of the given binary
-    Current {
-        /// Name of binary to view the current version of
+    /// Get active version of the given binary
+    Active {
+        /// Name of binary to view the active version of
         name: String,
     },
     /// Add a binary to binswap, so that you then can swap to it
     Add {
-        /// Alias of the binary to add
+        /// Name of the binary to add
         name: String,
         /// Version of the binary to add
         version: String,
@@ -49,9 +52,9 @@ pub enum SubCommand {
         #[structopt(parse(from_os_str))]
         path: PathBuf,
     },
-    /// Remove a binary from binswap
+    /// COMING SOON: Remove a binary from binswap
     Remove {
-        /// Alias of the binary to add
+        /// Name of the binary to add
         name: String,
         /// Version of the binary to add
         version: Option<String>,
