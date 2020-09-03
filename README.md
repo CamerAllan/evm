@@ -4,9 +4,11 @@
 
 `binswap` is a cli tool written in rust that helps you maintain a versioned archive of binaries, with the ability to quickly switch between them.
 
-## Use case
+## Why
 
-You need to rapidly switch between several versions of an executable whose name does not include its version number, and you can't change its name for whatever reason.
+I made this mostly as an excuse to learn rust, but it plugs a gap.
+I was having to deal with several versions of a binary whose name didn't include the version, and I couldn't find a tool that dealt with this situation gracefully.
+Think of it like `nvm`, but not just for node! but also shit.
 
 ## Why can't I just add the version to the names
 
