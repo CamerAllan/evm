@@ -8,6 +8,7 @@ use structopt::StructOpt;
 
 pub const ACTIVE: &str = "active";
 pub const ARCHIVE: &str = "archive";
+pub const PROFILE: &str = ".profile";
 pub const BINSWAP_DEFAULT_LOCATION: &str = ".config";
 pub const BINSWAP_CONFIG_DIR_NAME: &str = "binswap";
 
@@ -30,23 +31,36 @@ fn get_config_location(input_location: Option<PathBuf>) -> PathBuf {
 
 fn run(opt: BinSwapOpts) {
     let bs = BinSwap {
+        profile_location: home_dir().unwrap().join(PROFILE),
         config_location: get_config_location(opt.location),
         active_location_relative: PathBuf::from(ACTIVE),
         archive_location_relative: PathBuf::from(ARCHIVE),
     };
 
     let command = match opt.cmd {
+        // If user has specified a command, do that
         Some(cmd) => cmd,
-        None => SubCommand::Swap {
-            // Default to swap
-            name: opt.name.unwrap(),
-            version: opt.version.unwrap(),
-        },
+        // No command specified
+        None => {
+            match opt.version {
+                // If version specified, swap to that version
+                Some(version) => SubCommand::Swap {
+                    name: opt.name.unwrap(), // StructOpts catches the no name case for now
+                    version: version,
+                },
+                // If no version is specified, show the current version
+                None => match opt.name {
+                    Some(name) => SubCommand::Current { name },
+                    None => panic!("Run with --help to for usage info."),
+                },
+            }
+        }
     };
 
     let res = match &command {
         SubCommand::Init {} => bs.init(),
         SubCommand::Swap { name, version } => bs.swap(&name, &version),
+        SubCommand::List { name } => bs.list(&name),
         SubCommand::Current { name } => bs.current(&name),
         SubCommand::Add {
             name,
@@ -57,7 +71,7 @@ fn run(opt: BinSwapOpts) {
     };
 
     match res {
-        Ok(_) => println!("{:?} completed successfully.", &command),
+        Ok(_) => (),
         Err(e) => println!("{:?} failed:\n{:?}", &command, &e),
     }
 }

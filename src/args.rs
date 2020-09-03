@@ -24,11 +24,19 @@ pub enum SubCommand {
     Init {},
     /// Swap to a different version of the given binary
     Swap {
+        /// Name of binary to swap to
         name: String,
         /// Version of the binary to swap to
         version: String,
     },
+    /// List all versions of a given binary
+    List {
+        /// Name of the binary to list versions of
+        name: String,
+    },
+    /// Get current version of the given binary
     Current {
+        /// Name of binary to view the current version of
         name: String,
     },
     /// Add a binary to binswap, so that you then can swap to it
@@ -46,6 +54,6 @@ pub enum SubCommand {
         /// Alias of the binary to add
         name: String,
         /// Version of the binary to add
-        version: String,
+        version: Option<String>,
     },
 }
