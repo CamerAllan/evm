@@ -11,13 +11,6 @@ I made this mostly as an excuse to learn rust, but it plugs a gap.
 I was having to deal with several versions of a binary whose name didn't include the version, and I couldn't find a tool that dealt with this situation gracefully.
 Think of it like `nvm`, but not just for node! but also shit.
 
-## Why can't I just add the version to the names
-
-Maybe one of these:
-
-- The executable is run in several places in a program, you don't want to change the version in each of these
-- You use the same version most of the time and don't want to have to type out that same version every time
-
 ## How does it work
 
 - Upon initialisation, binswap will add a line to your `~/.profile` that *prepends* the `binswap/active` directory to PATH. 
