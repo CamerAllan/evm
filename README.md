@@ -34,22 +34,19 @@ Don't, it's riddled.
 
 Subcommands in square brackets may be omitted, as they are the default behaviour for their corresponding argument count.
 
-**Initialise**
+```bash
+#Initialise
+bs init
 
-`bs init`
+#Register new binary version:
+bs [add] <binary-name> <binary-version> <path-to-binary>
 
-**Register new binary version:**
+#Switch to registered binary version
+bs [swap] <binary-name> <binary-version>
 
-`bs [add] <binary-name> <binary-version> <path-to-binary>`
+#Get currently active version of binary
+bs [active] <binary_name>
 
-**Switch to registered binary version**
-
-`bs [swap] <binary-name> <binary-version>`
-
-**Get currently active version of binary**
-
-`bs [active] <binary_name>`
-
-**List all registered versions of binary**
-
-`bs list <binary-name>`
+#List all registered versions of binary
+bs list <binary-name>
+```
