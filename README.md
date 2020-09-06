@@ -35,18 +35,25 @@ Don't, it's riddled.
 Subcommands in square brackets may be omitted, as they are the default behaviour for their corresponding argument count.
 
 ```bash
-#Initialise
+# Initialise evm
+# This creates the active binary directory and prepends it to your PATH in your .profile
 evm init
 
-#Register new binary version:
+# Register new binary version:
 evm [add] <binary-name> <binary-version> <path-to-binary>
 
-#Switch to registered binary version
+# Switch to registered binary version
 evm [swap] <binary-name> <binary-version>
 
-#List all registered versions of binary
+# List all registered versions of binary
 evm [list] <binary-name>
 
-#Get currently active version of binary
+# Get currently active version of binary
 evm active <binary_name>
+
+# Remove a version of a binary
+evm remove <binary_name> <binary-version>
+
+# Remove all versions of a binary
+evm remove <binary_name>
 ```

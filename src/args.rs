@@ -52,7 +52,7 @@ pub enum SubCommand {
         #[structopt(parse(from_os_str))]
         path: PathBuf,
     },
-    /// COMING SOON: Remove a binary from evm
+    /// Remove a binary from evm
     Remove {
         /// Name of the binary to add
         name: String,
