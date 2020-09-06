@@ -2,10 +2,14 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum Error {
-    #[error("Cannot find binary {0}. Are you using the correct alias?")]
+    #[error("Binary '{0}' is not registered with evm.")]
     BinaryNotFoundError(String),
-    #[error("Cannot find version {1} of binary {0}. Have you added this version?")]
+    #[error(
+        "'{0} {1}' is not registered with evm. Check which versions are registered with: evm list {0}"
+    )]
     BinaryVersionNotFoundError(String, String),
+    #[error("Cannot delete the active version of a binary. Please switch to another version and try again.")]
+    DeleteActiveBinaryError,
     #[error("Something went wrong.")]
     GenericError,
 }

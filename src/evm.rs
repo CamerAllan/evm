@@ -9,23 +9,20 @@ use std::path;
 pub fn initialise(config: &EvmConfiguration) -> Result<()> {
     let active_dir = config.active_dir();
 
-    // Prepend the active directory to PATH
     let mut profile = OpenOptions::new()
         .read(true)
         .write(true)
         .append(true)
-        .open(&config.profile_location)
-        .unwrap();
+        .open(&config.profile_location)?;
 
+    // Prepend the active directory to PATH on start
     let export = format!("export PATH={:?}:$PATH", &active_dir);
 
     let mut profile_contents = String::new();
-    profile
-        .read_to_string(&mut profile_contents)
-        .expect("Can't read profile");
+    profile.read_to_string(&mut profile_contents)?;
 
     if !profile_contents.contains(&export) {
-        // Only add export once
+        // Don't add export if it already exists
         if let Err(err) = writeln!(profile, "{}", &export) {
             eprintln!("Couldn't write to file '{:?}': {}", &active_dir, err);
         }
@@ -145,13 +142,14 @@ pub fn remove_bin_version(
                 )
                 .into());
             }
+            if version == &active {
+                return Err(Error::DeleteActiveBinaryError.into());
+            }
             dir_to_remove = config.archive_bin_ver_dir(name, version);
 
-            if version == &active {
-                // Remove symlink only if we're removing currenlty activated version
-                if let Err(err) = fs::remove_file(active_bin) {
-                    return Err(Error::GenericError.into());
-                }
+            // Remove symlink only if we're removing currenlty activated version
+            if let Err(err) = fs::remove_file(active_bin) {
+                return Err(Error::GenericError.into());
             }
         }
         None => {
