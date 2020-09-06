@@ -1,4 +1,4 @@
-# evm - everything verson manager
+# evm - everything version manager
 
 ## What is this
 
