@@ -2,7 +2,7 @@
 
 ## What is this
 
-`evm` is a binary version manager written in rust. It enables you to quickly swap the version of a binary on your $PATH.
+`evm` is a binary version manager written in rust. It enables you to quickly swap the version of any binary on your $PATH.
 
 ## Why
 
