@@ -2,8 +2,8 @@ use std::path::PathBuf;
 use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
-/// binswap allows you to quickly swap out different binary versions
-pub struct BinSwapOpts {
+/// evm allows you to quickly swap out different binary versions
+pub struct evmOpts {
     /// Name of the binary
     #[structopt()]
     pub name: Option<String>,
@@ -16,14 +16,14 @@ pub struct BinSwapOpts {
 
     #[structopt(subcommand)]
     pub cmd: Option<SubCommand>,
-    /// binswap config location, defaults to ~/.config/binswap.
-    #[structopt(parse(from_os_str), env = "BINSWAP_CONFIG")]
+    /// evm config location, defaults to ~/.config/evm.
+    #[structopt(parse(from_os_str), env = "EVM_CONFIG")]
     pub location: Option<PathBuf>,
 }
 
 #[derive(StructOpt, Debug)]
 pub enum SubCommand {
-    /// Initialise binswap
+    /// Initialise evm
     Init {},
     /// Swap to a different version of the given binary
     Swap {
@@ -42,7 +42,7 @@ pub enum SubCommand {
         /// Name of binary to view the active version of
         name: String,
     },
-    /// Add a binary to binswap, so that you then can swap to it
+    /// Add a binary to evm, so that you then can swap to it
     Add {
         /// Name of the binary to add
         name: String,
@@ -52,7 +52,7 @@ pub enum SubCommand {
         #[structopt(parse(from_os_str))]
         path: PathBuf,
     },
-    /// COMING SOON: Remove a binary from binswap
+    /// COMING SOON: Remove a binary from evm
     Remove {
         /// Name of the binary to add
         name: String,

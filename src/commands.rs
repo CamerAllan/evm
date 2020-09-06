@@ -1,10 +1,11 @@
+use crate::evm;
 use std::fs;
 use std::fs::OpenOptions;
 use std::io::{Error, ErrorKind, Read, Write};
 use std::os::unix::fs::symlink;
 use std::path;
 
-pub struct BinSwap {
+pub struct EvmConfig {
     pub profile_location: path::PathBuf,
     pub config_location: path::PathBuf,
     pub archive_location_relative: path::PathBuf,
@@ -12,7 +13,7 @@ pub struct BinSwap {
 }
 
 // API
-impl BinSwap {
+impl EvmConfig {
     pub fn init(self) -> std::io::Result<()> {
         let active_dir = &self.active_dir();
 
@@ -132,7 +133,7 @@ impl BinSwap {
 }
 
 // Helpers
-impl BinSwap {
+impl EvmConfig {
     fn active_dir(&self) -> path::PathBuf {
         self.config_location
             .join(self.active_location_relative.clone())

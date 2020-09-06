@@ -1,23 +1,23 @@
-# 🗑️binswap🔀
+# evm - everything verson manager
 
 ## What is this
 
-`binswap` is a cli tool written in rust that helps you maintain a versioned archive of binaries, with the ability to quickly switch between them.
+`evm` is a binary version manager written in rust. It enables you to quickly swap the version of a binary on your $PATH.
 
 ## Why
 
 I made this mostly as an excuse to learn rust, but it plugs a gap.
 
 I was having to deal with several versions of a binary whose name didn't include the version, and I couldn't find a tool that dealt with this situation gracefully.
-Think of it like `nvm`, but not just for node! but also shit.
+Think of it like `nvm`, but not just for node! but also a bit shit.
 
 ## How does it work
 
-- Upon initialisation, binswap will add a line to your `~/.profile` that *prepends* the `binswap/active` directory to PATH. 
-- When you run `bs add`, the target binary is *copied* to the `binswap/archive/<name>/<version>` directory. 
+- Upon initialisation, evm will add a line to your `~/.profile` that *prepends* the `evm/active` directory to PATH. 
+- When you run `evm add`, the target binary is *copied* to the `evm/archive/<name>/<version>` directory. 
     - Default behaviour is to automatically switch to newly added versions
-- You can then `bs swap` between versions of that binary.
-    - This works by creating a symbolic link in the `binswap/active` directory that points to the currently active version of the binary.
+- You can then `evm swap` between versions of that binary.
+    - This works by creating a symbolic link in the `evm/active` directory that points to the currently active version of the binary.
 - The symlinks are created with the name supplied to `add`, so use this to run the binary
 
 ## How do I use this
@@ -36,17 +36,17 @@ Subcommands in square brackets may be omitted, as they are the default behaviour
 
 ```bash
 #Initialise
-bs init
+evm init
 
 #Register new binary version:
-bs [add] <binary-name> <binary-version> <path-to-binary>
+evm [add] <binary-name> <binary-version> <path-to-binary>
 
 #Switch to registered binary version
-bs [swap] <binary-name> <binary-version>
+evm [swap] <binary-name> <binary-version>
 
 #Get currently active version of binary
-bs [active] <binary_name>
+evm [active] <binary_name>
 
 #List all registered versions of binary
-bs list <binary-name>
+evm list <binary-name>
 ```
