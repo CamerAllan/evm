@@ -3,7 +3,7 @@ use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
 /// evm allows you to quickly swap out different binary versions
-pub struct evmOpts {
+pub struct EvmOpts {
     /// Name of the binary
     #[structopt()]
     pub name: Option<String>,

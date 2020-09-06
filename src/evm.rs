@@ -1,18 +1,19 @@
+use crate::commands::EvmConfiguration;
 use std::fs;
 use std::fs::OpenOptions;
 use std::io::{Error, ErrorKind, Read, Write};
 use std::os::unix::fs::symlink;
 use std::path;
 
-pub fn initialise(self) -> std::io::Result<()> {
-    let active_dir = &self.active_dir();
+pub fn initialise(config: &EvmConfiguration) -> std::io::Result<()> {
+    let active_dir = config.active_dir();
 
     // Prepend the active directory to PATH
     let mut profile = OpenOptions::new()
         .read(true)
         .write(true)
         .append(true)
-        .open(&self.profile_location)
+        .open(&config.profile_location)
         .unwrap();
 
     let export = format!("export PATH={:?}:$PATH", &active_dir);
@@ -30,96 +31,115 @@ pub fn initialise(self) -> std::io::Result<()> {
     }
 
     // Create base directories in config
-    fs::create_dir_all(self.active_dir())?;
-    fs::create_dir_all(self.archive_dir())?;
+    fs::create_dir_all(config.active_dir())?;
+    fs::create_dir_all(config.archive_dir())?;
     Ok(())
 }
 
-pub fn swap_to_version(self, name: &str, version: &str) -> std::io::Result<()> {
-    let active_bin = self.active_bin(name);
+pub fn swap_to_version(
+    config: &EvmConfiguration,
+    name: &str,
+    version: &str,
+) -> std::io::Result<()> {
+    let active_bin = config.active_bin(name);
 
     // Remove existing symlink
     match fs::remove_file(&active_bin) {
         Ok(_) => (),
         Err(err) => match err.kind() {
             ErrorKind::NotFound => (), // First time activating this name
-            _ => panic!("Error removing existing symlink"),
+            err => panic!("Error removing existing symlink"),
         },
     }
     // Symlink from active to archive
-    match symlink(self.archive_bin_ver(&name, &version), &active_bin) {
+    match symlink(config.archive_bin_ver(&name, &version), &active_bin) {
         Ok(_) => (),
         Err(err) => return Err(err),
     }
     Ok(())
 }
 
-pub fn list_versions(self, name: &str) -> std::io::Result<()> {
-    let mut entries = fs::read_dir(&self.archive_bin(&name))?
+pub fn list_versions(
+    config: &EvmConfiguration,
+    name: &str,
+) -> std::io::Result<std::vec::Vec<path::PathBuf>> {
+    let mut entries = fs::read_dir(config.archive_bin(&name))?
         .map(|res| res.map(|e| e.path()))
         .collect::<Result<Vec<_>, Error>>()?;
     entries.sort();
 
-    for entry in entries.iter() {
-        println!("{:?}", entry.file_name().unwrap())
-    }
-
-    Ok(())
+    Ok(entries)
 }
 
-pub fn get_active_version(self, name: &str) -> std::io::Result<()> {
+pub fn get_active_version(config: &EvmConfiguration, name: &str) -> std::io::Result<String> {
     // Read the actual file we're symlinked to
-    match fs::read_link(&self.active_bin(&name)) {
-        Ok(archive_bin) => println!(
-            "Active version of {:?} is {:?}",
-            name,
-            archive_bin.parent().unwrap().file_name().unwrap(),
-        ),
+    match fs::read_link(config.active_bin(&name)) {
+        Ok(archive_bin) => Ok(archive_bin
+            .parent() // Ewwww
+            .unwrap() // Ewwww
+            .file_name() // Ewwww
+            .unwrap() // Ewwww
+            .to_str() // Ewwww
+            .unwrap()
+            .to_string()), // Ewwww please fix
         Err(err) => return Err(err),
     }
-
-    Ok(())
 }
 
 pub fn add_bin_version(
-    self,
+    config: &EvmConfiguration,
     name: &str,
     version: &str,
     path: &path::PathBuf,
 ) -> std::io::Result<()> {
-    let archive_bin_dir = self.archive_bin_ver_dir(&name, &version);
+    let archive_bin_dir = config.archive_bin_ver_dir(&name, &version);
 
     // Create archive directory
     fs::create_dir_all(&archive_bin_dir)?;
 
     // Copy the binary into the archive path
-    match fs::copy(path, self.archive_bin_ver(&name, &version)) {
+    match fs::copy(path, &config.archive_bin_ver(&name, &version)) {
         Ok(_) => (),
         Err(err) => return Err(err),
     }
 
-    self.swap(&name, &version)?;
+    swap_to_version(&config, &name, &version)?;
 
     Ok(())
 }
 
-pub fn remove_bin_version(self, name: &str, version: &Option<String>) -> std::io::Result<()> {
-    // TODO: Refactor out command implementation, then call active() to see if we need to remove the symlink
-    // For now we just leave the symlink
-
+pub fn remove_bin_version(
+    config: &EvmConfiguration,
+    name: &str,
+    version: &Option<String>,
+) -> std::io::Result<()> {
+    let active = get_active_version(&config, &name).unwrap();
+    let active_bin = config.active_bin(&name);
     let dir_to_remove: path::PathBuf;
 
     match version {
         Some(version) => {
-            dir_to_remove = self.archive_bin_ver_dir(name, version);
+            dir_to_remove = config.archive_bin_ver_dir(name, version);
+
+            if version == &active {
+                // Remove symlink only if we're removing currenlty activated version
+                if let Err(err) = fs::remove_file(active_bin) {
+                    return Err(err);
+                }
+            }
         }
         None => {
             // Remove all versions of this binary
-            dir_to_remove = self.archive_bin(name);
+            dir_to_remove = config.archive_bin(&name);
+            // Remove symlink
+            if let Err(err) = fs::remove_file(active_bin) {
+                return Err(err);
+            }
         }
     }
+
     // Remove only this version of this binary
-    if let Err(err) = fs::remove_dir(&dir_to_remove) {
+    if let Err(err) = fs::remove_dir_all(&dir_to_remove) {
         return Err(err);
     }
 

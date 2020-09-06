@@ -2,7 +2,7 @@ mod args;
 mod commands;
 mod evm;
 use args::{EvmOpts, SubCommand};
-use commands::EvmConfig;
+use commands::EvmConfiguration;
 use dirs::home_dir;
 use std::path::PathBuf;
 use structopt::StructOpt;
@@ -31,7 +31,7 @@ fn get_config_location(input_location: Option<PathBuf>) -> PathBuf {
 }
 
 fn run(opt: EvmOpts) {
-    let configuration = EvmConfig {
+    let configuration = EvmConfiguration {
         profile_location: home_dir().unwrap().join(PROFILE),
         config_location: get_config_location(opt.location),
         active_location_relative: PathBuf::from(ACTIVE),
@@ -58,7 +58,7 @@ fn run(opt: EvmOpts) {
                     },
                     // If no version is specified, show the active version
                     None => match opt.name {
-                        Some(name) => SubCommand::Active { name },
+                        Some(name) => SubCommand::List { name },
                         None => {
                             println!("Run `evm --help` for usage info.");
                             return;
