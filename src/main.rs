@@ -1,6 +1,8 @@
 mod args;
 mod commands;
 mod evm;
+mod lib;
+use anyhow::Result;
 use args::{EvmOpts, SubCommand};
 use commands::EvmConfiguration;
 use dirs::home_dir;
@@ -13,7 +15,7 @@ pub const PROFILE: &str = ".profile";
 pub const EVM_DEFAULT_LOCATION: &str = ".config";
 pub const EVM_CONFIG_DIR_NAME: &str = "evm";
 
-fn main() {
+fn main() -> Result<()> {
     let opt = EvmOpts::from_args();
     run(opt)
 }
@@ -30,7 +32,7 @@ fn get_config_location(input_location: Option<PathBuf>) -> PathBuf {
     config_location
 }
 
-fn run(opt: EvmOpts) {
+fn run(opt: EvmOpts) -> Result<()> {
     let configuration = EvmConfiguration {
         profile_location: home_dir().unwrap().join(PROFILE),
         config_location: get_config_location(opt.location),
@@ -61,7 +63,7 @@ fn run(opt: EvmOpts) {
                         Some(name) => SubCommand::List { name },
                         None => {
                             println!("Run `evm --help` for usage info.");
-                            return;
+                            return Ok(());
                         }
                     },
                 },
@@ -69,7 +71,7 @@ fn run(opt: EvmOpts) {
         }
     };
 
-    let res = match &command {
+    let res = match command {
         SubCommand::Init {} => configuration.init(),
         SubCommand::Swap { name, version } => configuration.swap(&name, &version),
         SubCommand::List { name } => configuration.list(&name),
@@ -82,8 +84,5 @@ fn run(opt: EvmOpts) {
         SubCommand::Remove { name, version } => configuration.remove(&name, &version),
     };
 
-    match res {
-        Ok(_) => (),
-        Err(e) => println!("{:?} failed:\n{:?}", &command, &e),
-    }
+    return res;
 }

@@ -1,4 +1,5 @@
 use crate::evm;
+use anyhow::Result;
 use std::path;
 
 pub struct EvmConfiguration {
@@ -10,24 +11,24 @@ pub struct EvmConfiguration {
 
 // API
 impl EvmConfiguration {
-    pub fn init(self) -> std::io::Result<()> {
+    pub fn init(self) -> Result<()> {
         match evm::initialise(&self) {
             Ok(_) => Ok(println!("Successfully initialised evm. Please open a new session or source {:?} to start using.", self.profile_location)),
             Err(err) => return Err(err)
         }
     }
 
-    pub fn swap(self, name: &str, version: &str) -> std::io::Result<()> {
+    pub fn swap(self, name: &str, version: &str) -> Result<()> {
         evm::swap_to_version(&self, name, version)
     }
 
-    pub fn list(self, name: &str) -> std::io::Result<()> {
+    pub fn list(self, name: &str) -> Result<()> {
         let active = evm::get_active_version(&self, name).unwrap();
         let versions = evm::list_versions(&self, name);
 
-        for entry in versions?.iter() {
-            let file_name = entry.file_name().unwrap();
-            if active.eq(&file_name.to_string_lossy()) {
+        for entry in versions.unwrap().iter() {
+            let file_name = entry.file_name();
+            if active.eq(&file_name.unwrap().to_string_lossy()) {
                 print!("*");
             }
             println!("{}", entry.file_name().unwrap().to_string_lossy());
@@ -36,7 +37,7 @@ impl EvmConfiguration {
         Ok(())
     }
 
-    pub fn active(self, name: &str) -> std::io::Result<()> {
+    pub fn active(self, name: &str) -> Result<()> {
         println!(
             "Active version of {} is {}",
             name,
@@ -46,11 +47,11 @@ impl EvmConfiguration {
         Ok(())
     }
 
-    pub fn add(self, name: &str, version: &str, path: &path::PathBuf) -> std::io::Result<()> {
+    pub fn add(self, name: &str, version: &str, path: &path::PathBuf) -> Result<()> {
         evm::add_bin_version(&self, name, version, path)
     }
 
-    pub fn remove(self, name: &str, version: &Option<String>) -> std::io::Result<()> {
+    pub fn remove(self, name: &str, version: &Option<String>) -> Result<()> {
         let active_version = evm::get_active_version(&self, name);
         evm::remove_bin_version(&self, name, version)
     }
