@@ -9,7 +9,7 @@
 I made this mostly as an excuse to learn rust, but it plugs a gap.
 
 I was having to deal with several versions of a binary whose name didn't include the version, and I couldn't find a tool that dealt with this situation gracefully.
-Think of it like managing node with `nvm`, but for everything!
+Think of it like managing local versions of node with `nvm`, but for anything!
 
 ## How does it work
 

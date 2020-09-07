@@ -124,7 +124,7 @@ pub fn add_bin_version(
     // Copy the binary into the archive path
     match fs::copy(path, &config.archive_bin_ver(&name, &version)) {
         Ok(_) => (),
-        Err(err) => return Err(Error::GenericError.into()),
+        Err(_) => return Err(Error::GenericError.into()),
     }
 
     swap_to_version(&config, &name, &version)?;
@@ -159,7 +159,7 @@ pub fn remove_bin_version(
             dir_to_remove = config.archive_bin_ver_dir(name, version);
 
             // Remove symlink only if we're removing currenlty activated version
-            if let Err(err) = fs::remove_file(active_bin) {
+            if let Err(_) = fs::remove_file(active_bin) {
                 return Err(Error::GenericError.into());
             }
         }
@@ -167,14 +167,14 @@ pub fn remove_bin_version(
             // Remove all versions of this binary
             dir_to_remove = config.archive_bin(&name);
             // Remove symlink
-            if let Err(err) = fs::remove_file(active_bin) {
+            if let Err(_) = fs::remove_file(active_bin) {
                 return Err(Error::GenericError.into());
             }
         }
     }
 
     // Remove only this version of this binary
-    if let Err(err) = fs::remove_dir_all(&dir_to_remove) {
+    if let Err(_) = fs::remove_dir_all(&dir_to_remove) {
         return Err(Error::GenericError.into());
     }
 
