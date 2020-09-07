@@ -22,13 +22,10 @@ Think of it like managing local versions of node with `nvm`, but for anything!
 
 ## How do I use this
 
-Don't, it's riddled.
-
-### Installation from source
-
-- Grab the latest stable version of Rust
-- Add `/home/<USER>/.cargo/bin` to your PATH to be able to run the installed binary
-- Run `cargo install` **???**
+- Dowload the latest binary release
+- Run `evm init`
+    - run `source ~/.profile`. This won't be necessary in `1.0.0`
+- Done!
 
 ### Usage
 
