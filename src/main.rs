@@ -1,10 +1,10 @@
 mod args;
-mod commands;
+mod configuration;
 mod evm;
 mod lib;
 use anyhow::Result;
 use args::{EvmOpts, SubCommand};
-use commands::EvmConfiguration;
+use configuration::EvmConfiguration;
 use dirs::home_dir;
 use std::path::PathBuf;
 use structopt::StructOpt;
@@ -60,7 +60,7 @@ fn run(opt: EvmOpts) -> Result<()> {
                     },
                     // If no version is specified, show the active version
                     None => match opt.name {
-                        Some(name) => SubCommand::List { name },
+                        Some(_) => SubCommand::List { name: opt.name },
                         None => {
                             println!("Run `evm --help` for usage info.");
                             return Ok(());
@@ -74,7 +74,7 @@ fn run(opt: EvmOpts) -> Result<()> {
     let res = match command {
         SubCommand::Init {} => configuration.init(),
         SubCommand::Swap { name, version } => configuration.swap(&name, &version),
-        SubCommand::List { name } => configuration.list(&name),
+        SubCommand::List { name } => configuration.list(name),
         SubCommand::Active { name } => configuration.active(&name),
         SubCommand::Add {
             name,

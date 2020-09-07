@@ -35,7 +35,7 @@ pub enum SubCommand {
     /// List all versions of a given binary
     List {
         /// Name of the binary to list versions of
-        name: String,
+        name: Option<String>,
     },
     /// Get active version of the given binary
     Active {

@@ -45,6 +45,9 @@ evm [add] <binary-name> <binary-version> <path-to-binary>
 # Switch to registered binary version
 evm [swap] <binary-name> <binary-version>
 
+# List all registered binaries
+evm [list]
+
 # List all registered versions of binary
 evm [list] <binary-name>
 

@@ -1,4 +1,4 @@
-use crate::{commands::EvmConfiguration, lib::Error};
+use crate::{configuration::EvmConfiguration, lib::Error};
 use anyhow::Result;
 use std::fs;
 use std::fs::OpenOptions;
@@ -34,7 +34,7 @@ pub fn initialise(config: &EvmConfiguration) -> Result<()> {
     Ok(())
 }
 
-pub fn swap_to_version(config: &EvmConfiguration, name: &str, version: &str) -> Result<()> {
+pub fn swap_to_version(config: &EvmConfiguration, name: &String, version: &String) -> Result<()> {
     if !bin_exists(&config, name) {
         return Err(Error::BinaryNotFoundError(name.to_string()).into());
     }
@@ -63,9 +63,20 @@ pub fn swap_to_version(config: &EvmConfiguration, name: &str, version: &str) -> 
     Ok(())
 }
 
+pub fn list_binaries(config: &EvmConfiguration) -> Result<std::vec::Vec<path::PathBuf>> {
+    let mut entries = fs::read_dir(config.archive_dir())
+        .unwrap()
+        .map(|res| res.map(|e| e.path()))
+        .collect::<std::io::Result<Vec<_>>>()
+        .unwrap();
+    entries.sort();
+
+    Ok(entries)
+}
+
 pub fn list_versions(
     config: &EvmConfiguration,
-    name: &str,
+    name: &String,
 ) -> Result<std::vec::Vec<path::PathBuf>> {
     if !bin_exists(&config, name) {
         return Err(Error::BinaryNotFoundError(name.to_string()).into());
@@ -81,7 +92,7 @@ pub fn list_versions(
     Ok(entries)
 }
 
-pub fn get_active_version(config: &EvmConfiguration, name: &str) -> Result<String> {
+pub fn get_active_version(config: &EvmConfiguration, name: &String) -> Result<String> {
     if !bin_exists(&config, name) {
         return Err(Error::BinaryNotFoundError(name.to_string()).into());
     }
@@ -101,8 +112,8 @@ pub fn get_active_version(config: &EvmConfiguration, name: &str) -> Result<Strin
 
 pub fn add_bin_version(
     config: &EvmConfiguration,
-    name: &str,
-    version: &str,
+    name: &String,
+    version: &String,
     path: &path::PathBuf,
 ) -> Result<()> {
     let archive_bin_dir = config.archive_bin_ver_dir(&name, &version);
@@ -123,7 +134,7 @@ pub fn add_bin_version(
 
 pub fn remove_bin_version(
     config: &EvmConfiguration,
-    name: &str,
+    name: &String,
     version: &Option<String>,
 ) -> Result<()> {
     if !bin_exists(&config, name) {
@@ -170,10 +181,10 @@ pub fn remove_bin_version(
     Ok(())
 }
 
-fn bin_exists(config: &EvmConfiguration, name: &str) -> bool {
+fn bin_exists(config: &EvmConfiguration, name: &String) -> bool {
     config.archive_bin(name).exists()
 }
 
-fn bin_ver_exists(config: &EvmConfiguration, name: &str, ver: &str) -> bool {
+fn bin_ver_exists(config: &EvmConfiguration, name: &String, ver: &String) -> bool {
     config.archive_bin_ver(name, ver).exists()
 }
