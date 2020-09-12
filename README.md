@@ -20,7 +20,7 @@ Think of it like managing local versions of node with `nvm`, but for anything!
 
 ## How do I use this
 
-- Download the [latest binary release](https://github.com/CamerAllan/evm/releases/tag/0.1.0)
+- Download the [latest binary release](https://github.com/CamerAllan/evm/releases/tag/0.1.1)
 - Run `evm init`
     - run `source ~/.profile`
 - Done!
