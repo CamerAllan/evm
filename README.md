@@ -6,14 +6,12 @@
 
 ## Why
 
-I made this mostly as an excuse to learn rust, but it plugs a gap.
-
 I was having to deal with several versions of a binary whose name didn't include the version, and I couldn't find a tool that dealt with this situation gracefully.
 Think of it like managing local versions of node with `nvm`, but for anything!
 
 ## How does it work
 
-- Upon initialisation, evm will add a line to your `~/.profile` that *prepends* the `evm/active` directory to PATH. 
+- Upon initialisation, evm will add a line to your `~/.profile` that *prepends* the `evm/active` directory to PATH.
 - When you run `evm add`, the target binary is *copied* to the `evm/archive/<name>/<version>` directory. 
     - Default behaviour is to automatically switch to newly added versions
 - You can then `evm swap` between versions of that binary.
@@ -22,9 +20,9 @@ Think of it like managing local versions of node with `nvm`, but for anything!
 
 ## How do I use this
 
-- Dowload the latest binary release
+- Download the [latest binary release](https://github.com/CamerAllan/evm/releases/tag/0.1.0)
 - Run `evm init`
-    - run `source ~/.profile`. This won't be necessary in `1.0.0`
+    - run `source ~/.profile`
 - Done!
 
 ### Usage
@@ -57,3 +55,14 @@ evm remove <binary_name> <binary-version>
 # Remove all versions of a binary
 evm remove <binary_name>
 ```
+
+## Todo
+
+See the GitHub issues for a more comprehensive list.
+WRT core features, I'd say it's done for now.
+Load of quality of life improvements could be made.
+
+Number 1 priority is to add unit & integration tests.
+This will go hand in hand with improving the error handling, which currently leaves something to be desired.
+
+Please submit issues and PRs if you'd like to help!

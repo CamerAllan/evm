@@ -12,7 +12,8 @@ pub struct EvmConfiguration {
 impl EvmConfiguration {
     pub fn init(self) -> Result<()> {
         let res = evm::initialise(&self);
-        println!("Successfully initialised evm. Please open a new session or source {:?} to start using.", self.profile_location);
+        println!("Successfully initialised evm. Please run the following command to use evm in this session:");
+        println!("source {:?}", self.profile_location);
 
         res
     }
