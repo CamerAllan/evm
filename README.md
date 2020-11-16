@@ -18,6 +18,11 @@ Think of it like managing local versions of node with `nvm`, but for anything!
     - This works by creating a symbolic link in the `evm/active` directory that points to the currently active version of the binary.
 - The symlinks are created with the name supplied to `add`, so use this to run the binary
 
+## Support
+- [x] Linux (tested on arch linux)
+- [ ] Mac (might work but definitely breaks OS conventions)
+- [ ] Windows (will not work)
+
 ## How do I use this
 
 - Download the [latest binary release](https://github.com/CamerAllan/evm/releases/tag/0.1.1)
